@@ -1,32 +1,23 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Clone') {
-      steps {
-        dir('..') {
-          git 'https://github.com/Hardik2102/Nodejs-cicd.git'
-        }
-      }
+    environment {
+        DOCKER_IMAGE = "nodejs-app"
     }
 
-    stage('Build Docker Image') {
-      steps {
-        dir('..') {
-          sh 'docker build -t nodejs-app .'
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                dir("${env.WORKSPACE}") {
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                }
+            }
         }
-      }
-    }
 
-    stage('Deploy to Backend') {
-      steps {
-        sshagent(['my-ssh-key']) {
-          dir('..') {
-            sh 'scp -o StrictHostKeyChecking=no docker-compose.yml ubuntu@3.82.142.194:/home/ubuntu/'
-            sh 'ssh -o StrictHostKeyChecking=no ubuntu@3.82.142.194 "docker-compose up -d"'
-          }
+        stage('Deploy to Backend') {
+            steps {
+                sh 'docker run -d -p 8080:3000 --name nodejs-container ${DOCKER_IMAGE}'
+            }
         }
-      }
     }
-  }
 }
