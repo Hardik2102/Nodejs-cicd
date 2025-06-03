@@ -4,7 +4,7 @@ pipeline {
   stages {
     stage('Clone') {
       steps {
-        git 'https://github.com/your-username/your-nodejs-repo.git'
+        git 'https://github.com/Hardik2102/Nodejs-cicd.git'
       }
     }
     stage('Build Docker Image') {
@@ -14,8 +14,8 @@ pipeline {
     }
     stage('Deploy to Backend') {
       steps {
-        sh 'scp -i ~/.ssh/test.pem docker-compose.yml ubuntu@<backend_ip>:/home/ubuntu/'
-        sh 'ssh -i ~/.ssh/test.pem ubuntu@<backend_ip> "docker-compose up -d"'
+        sh 'scp -i ~/.ssh/test.pem docker-compose.yml ubuntu@3.82.142.194:/home/ubuntu/'
+        sh 'ssh -i ~/.ssh/test.pem ubuntu@3.82.142.194 "docker-compose up -d"'
       }
     }
   }
