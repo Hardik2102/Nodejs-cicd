@@ -1,0 +1,22 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Clone') {
+      steps {
+        git 'https://github.com/your-username/your-nodejs-repo.git'
+      }
+    }
+    stage('Build Docker Image') {
+      steps {
+        sh 'docker build -t nodejs-app .'
+      }
+    }
+    stage('Deploy to Backend') {
+      steps {
+        sh 'scp -i ~/.ssh/test.pem docker-compose.yml ubuntu@<backend_ip>:/home/ubuntu/'
+        sh 'ssh -i ~/.ssh/test.pem ubuntu@<backend_ip> "docker-compose up -d"'
+      }
+    }
+  }
+}
