@@ -15,10 +15,10 @@ pipeline {
         stage('Deploy to Backend') {
             steps {
                 sh '''
-                # Stop and remove old container if exists
-                docker ps -q -f name=nodejs-container | xargs -r docker rm -f
+                # Remove existing container even if it's stopped
+                docker ps -a -q -f name=nodejs-container | xargs -r docker rm -f
                 
-                # Run container on a free host port (8081)
+                # Run container on port 8081
                 docker run -d -p 8081:3000 --name nodejs-container ${DOCKER_IMAGE}
                 '''
             }
